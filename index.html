@@ -2099,24 +2099,30 @@ const GAS_CONFIGURED = GAS_URL && !GAS_URL.includes('PASTE_');
 async function gasGet(params) {
   if (!GAS_CONFIGURED) throw new Error('GAS_URL chưa cấu hình');
   const url = GAS_URL + '?' + new URLSearchParams(params).toString();
-  const res = await fetch(url);
-  const json = await res.json();
+  const res = await fetch(url, { redirect: 'follow' });
+  const text = await res.text();
+  const json = JSON.parse(text);
   if (!json.ok) throw new Error(json.error || 'GET thất bại');
   return json;
 }
 
-// ── Generic POST ──
+// ── Generic POST — dùng no-cors fetch + encode payload vào GET ──
+// Apps Script Web App không support POST với CORS đầy đủ từ browser,
+// nên encode payload thành base64 và gửi qua GET parameter.
 async function gasPost(payload) {
   if (!GAS_CONFIGURED) throw new Error('GAS_URL chưa cấu hình');
-  const res = await fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain' }, // avoid CORS preflight
-    body: JSON.stringify(payload),
-    redirect: 'follow',
-  });
-  const json = await res.json();
-  if (!json.ok) throw new Error(json.error || 'POST thất bại');
-  return json;
+  // Encode payload as base64 to avoid URL length issues
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const url = GAS_URL + '?payload=' + encodeURIComponent(encoded);
+  const res = await fetch(url, { redirect: 'follow' });
+  const text = await res.text();
+  try {
+    const json = JSON.parse(text);
+    if (!json.ok) throw new Error(json.error || 'POST thất bại');
+    return json;
+  } catch(e) {
+    throw new Error('Phản hồi không hợp lệ từ Apps Script: ' + text.substring(0, 100));
+  }
 }
 
 // ── Show/hide loading overlay ──
