@@ -3714,14 +3714,16 @@ function openEditUser(id) {
   document.getElementById('user-modal').classList.remove('hidden');
 }
 
-function saveUser() {
-  const username = document.getElementById('m-username').value.trim();
-  const password = document.getElementById('m-password').value;
+async function saveUser() {
+  const username    = document.getElementById('m-username').value.trim();
+  const password    = document.getElementById('m-password').value;
   const displayName = document.getElementById('m-displayname').value.trim();
-  const role = document.getElementById('m-role').value;
-  const provinces = [...document.querySelectorAll('#m-provinces input:checked')].map(c => c.value);
-  const forms = [...document.querySelectorAll('#m-forms input:checked')].map(c => c.value);
+  const role        = document.getElementById('m-role').value;
+  const provinces   = [...document.querySelectorAll('#m-provinces input:checked')].map(c => c.value);
+  const forms       = [...document.querySelectorAll('#m-forms input:checked')].map(c => c.value);
   if (!username || !password || !displayName) { alert('Vui lòng điền đầy đủ thông tin'); return; }
+
+  // Cập nhật in-memory trước để UI phản hồi ngay
   if (editingUserId) {
     const idx = users.findIndex(u => u.id === editingUserId);
     users[idx] = { ...users[idx], username, password, displayName, role, provinces, forms };
@@ -3730,11 +3732,54 @@ function saveUser() {
   }
   closeModal();
   buildAdminTable();
+
+  // Đồng bộ lên Google Sheet (nếu GAS đã cấu hình)
+  if (GAS_CONFIGURED) {
+    try {
+      showLoading('Đang lưu thông tin người dùng...');
+      await gasPost({
+        action:      'saveUser',
+        username,
+        password,
+        displayName,
+        role,
+        provinces:   JSON.stringify(provinces),
+        forms:       JSON.stringify(forms),
+        active:      true,
+        isEdit:      !!editingUserId,
+      });
+      hideLoading();
+    } catch(e) {
+      hideLoading();
+      console.warn('Lưu user lên Sheet thất bại:', e.message);
+      alert('⚠️ Lưu người dùng thành công trên thiết bị này, nhưng chưa đồng bộ được lên Google Sheets. Người dùng khác sẽ chưa thấy tài khoản mới cho đến khi đồng bộ thành công.');
+    }
+  }
 }
 
-function toggleUser(id) {
+async function toggleUser(id) {
   const user = users.find(u => u.id === id);
-  if (user) { user.active = !user.active; buildAdminTable(); }
+  if (!user) return;
+  user.active = !user.active;
+  buildAdminTable();
+
+  if (GAS_CONFIGURED) {
+    try {
+      await gasPost({
+        action:   'saveUser',
+        username: user.username,
+        password: user.password,
+        displayName: user.displayName,
+        role:     user.role,
+        provinces: JSON.stringify(user.provinces),
+        forms:    JSON.stringify(user.forms),
+        active:   user.active,
+        isEdit:   true,
+      });
+    } catch(e) {
+      console.warn('Đồng bộ trạng thái user thất bại:', e.message);
+    }
+  }
 }
 
 function closeModal() {
@@ -4414,6 +4459,250 @@ if (_origOpenM06New) {
     setTimeout(initXaDropdowns, 100);
   };
 }
+
+// ════════════════════════════════════════════════════════
+// PATCH — M03, M07, M08, M09, M10 → Google Sheets
+// ════════════════════════════════════════════════════════
+
+// ── Helper: đọc checkboxes trong một container ──
+function getCheckedValues(containerSelector) {
+  return Array.from(document.querySelectorAll(containerSelector + ' input[type=checkbox]:checked'))
+    .map(cb => cb.value).filter(Boolean);
+}
+
+// ────────────────────────────────────────────────────────
+// M03 — Liên kết thị trường
+// ────────────────────────────────────────────────────────
+const _origSubmitFormM03 = submitFormM03;
+submitFormM03 = async function() {
+  const ten  = document.getElementById('m3-ten-nhom')?.value?.trim();
+  const dt   = document.getElementById('m3-ten-dt')?.value?.trim();
+  const tinh = document.getElementById('m3-tinh')?.value;
+  if (!ten || !dt || !tinh) { alert('Vui lòng điền đầy đủ các trường bắt buộc (*)'); return; }
+
+  const period = document.getElementById('m3-ky-bc')?.value || m06CurrentPeriod();
+  addToHistory('M03', `Liên kết: ${ten} — ${dt}`,
+    `Nhóm: ${ten}\nĐối tác: ${dt}\nTỉnh: ${tinh}\nKỳ: ${period}`, tinh);
+
+  await gasSubmit('submitM03', {
+    submittedBy:  currentUser.username,
+    period,
+    tinh,
+    xa:           document.getElementById('m3-xa')?.value || '',
+    thon:         document.getElementById('m3-thon')?.value || '',
+    tenLienKet:   ten,
+    loaiLienKet:  document.getElementById('m3-loai-nhom')?.value || '',
+    doiTac:       dt,
+    loaiDoiTac:   document.getElementById('m3-loai-dt')?.value || '',
+    hinhThuc:     document.getElementById('m3-hinh-thuc')?.value || '',
+    ngayLap:      document.getElementById('m3-ngay-lap')?.value || '',
+    mucDich:      getCheckedValues('#page-form-m03 .checkbox-grid').join('; '),
+    soHo:         document.getElementById('m3-so-ho')?.value || '0',
+    moTa:         document.getElementById('m3-mo-ta')?.value || '',
+    hoTroDuAn:    getCheckedValues('#page-form-m03 .form-section:nth-of-type(3) .checkbox-grid').join('; '),
+    bangChung:    getCheckedValues('#page-form-m03 .form-section:nth-of-type(4) .checkbox-grid').join('; '),
+    linkBC:       document.getElementById('m3-link-bc')?.value || '',
+  }, 'submit-success-m03', `Đã ghi liên kết "${ten}" vào sheet M03_LienKetTT.`);
+
+  _origSubmitFormM03();
+};
+
+// ────────────────────────────────────────────────────────
+// M07 — Chính sách
+// ────────────────────────────────────────────────────────
+const _origSubmitFormM07 = submitFormM07;
+submitFormM07 = async function() {
+  const ten  = document.getElementById('m7-ten-cs')?.value?.trim();
+  const tinh = document.getElementById('m7-tinh')?.value;
+  const pl   = document.getElementById('m7-phan-loai')?.value;
+  if (!ten || !tinh || !pl) { alert('Vui lòng điền đầy đủ các trường bắt buộc (*)'); return; }
+
+  const period = document.getElementById('m7-ky-bc')?.value || m06CurrentPeriod();
+  addToHistory('M07', `Chính sách: ${ten}`,
+    `Tên: ${ten}\nTỉnh: ${tinh}\nPhân loại: ${pl}\nKỳ: ${period}`, tinh);
+
+  await gasSubmit('submitM07', {
+    submittedBy:   currentUser.username,
+    period,
+    tinh,
+    xa:            document.getElementById('m7-xa')?.value || '',
+    capDo:         document.getElementById('m7-cap')?.value || '',
+    tenChinhSach:  ten,
+    phanLoai:      pl,
+    phanLoaiCS:    document.getElementById('m7-pl-cs')?.value || '',
+    ngayBanHanh:   document.getElementById('m7-ngay-bh')?.value || '',
+    chuDe:         getCheckedValues('#page-form-m07 .checkbox-grid').join('; '),
+    moTa:          document.getElementById('m7-mo-ta')?.value || '',
+    ketQua:        document.getElementById('m7-mo-ta-kq')?.value || '',
+    nhlUocTinh:    document.getElementById('m7-nhl-tt')?.value || '0',
+    moTaCoChe:     document.getElementById('m7-pp-gt')?.value || '',
+    hoTroDuAn:     getCheckedValues('#page-form-m07 .form-section:nth-of-type(3) .checkbox-grid').join('; '),
+    bangChung:     getCheckedValues('#page-form-m07 .form-section:nth-of-type(4) .checkbox-grid').join('; '),
+    linkBC:        document.getElementById('m7-link-bc')?.value || '',
+  }, 'submit-success-m07', `Đã ghi chính sách "${ten}" vào sheet M07_VanDongCS.`);
+
+  _origSubmitFormM07();
+};
+
+// ────────────────────────────────────────────────────────
+// M08 — Quy trình ra quyết định
+// ────────────────────────────────────────────────────────
+const _origSubmitFormM08 = submitFormM08;
+submitFormM08 = async function() {
+  const ten  = document.getElementById('m8-ten-cs')?.value?.trim();
+  const tinh = document.getElementById('m8-tinh')?.value;
+  if (!ten || !tinh) { alert('Vui lòng điền đầy đủ các trường bắt buộc (*)'); return; }
+
+  const period = document.getElementById('m8-ky-bc')?.value || m06CurrentPeriod();
+  addToHistory('M08', `Quyết định: ${ten}`,
+    `Tên: ${ten}\nTỉnh: ${tinh}\nKỳ: ${period}`, tinh);
+
+  await gasSubmit('submitM08', {
+    submittedBy:   currentUser.username,
+    period,
+    tinh,
+    xa:            document.getElementById('m8-xa')?.value || '',
+    thon:          document.getElementById('m8-thon')?.value || '',
+    tenCS:         ten,
+    capDo:         document.getElementById('m8-cap')?.value || '',
+    nhomYeuThe:    getCheckedValues('#page-form-m08 .checkbox-grid:nth-of-type(1)').join('; '),
+    hinhThucTG:    getCheckedValues('#page-form-m08 .checkbox-grid:nth-of-type(2)').join('; '),
+    anhHuong:      document.querySelector('input[name="m8-anh-huong"]:checked')?.value || '',
+    moTaAnhHuong:  document.getElementById('m8-mo-ta-ah')?.value || '',
+    hoTroTG:       getCheckedValues('#page-form-m08 .checkbox-grid:nth-of-type(3)').join('; '),
+    bangChung:     getCheckedValues('#page-form-m08 .checkbox-grid:nth-of-type(4)').join('; '),
+    linkBC:        document.getElementById('m8-link-bc')?.value || '',
+  }, 'submit-success-m08', `Đã ghi "${ten}" vào sheet M08_ThamGiaNhomYeuThe.`);
+
+  _origSubmitFormM08();
+};
+
+// ────────────────────────────────────────────────────────
+// M09 — Theo dõi CSA & NBS
+// ────────────────────────────────────────────────────────
+const _origSubmitFormM09 = submitFormM09;
+submitFormM09 = async function(tab) {
+  const isp    = tab === 'practice';
+  const tbody  = isp ? '#practice-tbody' : '#household-tbody';
+  const action = isp ? 'submitM09Practice' : 'submitM09Household';
+  const prov   = currentUser?.provinces[0] || '—';
+
+  const rows = [];
+  document.querySelectorAll(tbody + ' tr').forEach(row => {
+    const nameEl = row.querySelector(isp ? '.p-ten-th' : '.hh-ten');
+    if (!nameEl || !nameEl.value.trim()) return;
+
+    const cells = row.querySelectorAll('td');
+    if (isp) {
+      rows.push({
+        kyBC:        cells[1]?.querySelector('input')?.value || '',
+        maTH:        cells[2]?.querySelector('input')?.value || '',
+        tenTH:       cells[3]?.querySelector('input')?.value || '',
+        tinh:        cells[4]?.querySelector('select')?.value || '',
+        xa:          cells[5]?.querySelector('input')?.value || '',
+        thon:        cells[6]?.querySelector('input')?.value || '',
+        laNBS:       cells[7]?.querySelector('select')?.value || '',
+        giamLD:      cells[8]?.querySelector('select')?.value || '',
+        coCheLD:     cells[9]?.querySelector('input')?.value || '',
+        loaiHinhTK:  cells[10]?.querySelector('select')?.value || '',
+        quyMoTK:     cells[11]?.querySelector('select')?.value || '',
+        hoTC:        cells[12]?.querySelector('input')?.value || '0',
+        hoAD:        cells[13]?.querySelector('input')?.value || '0',
+        ppTinh:      cells[14]?.querySelector('select')?.value || '',
+        nhlGT:       cells[15]?.querySelector('input')?.value || '0',
+      });
+    } else {
+      rows.push({
+        kyBC:        cells[1]?.querySelector('input')?.value || '',
+        maTH:        cells[2]?.querySelector('input')?.value || '',
+        tenTH:       cells[3]?.querySelector('input')?.value || '',
+        maHo:        cells[4]?.querySelector('input')?.value || '',
+        tenHo:       cells[5]?.querySelector('input')?.value || '',
+        gioiTinh:    cells[6]?.querySelector('select')?.value || '',
+        danToc:      cells[7]?.querySelector('input')?.value || '',
+        namSinh:     cells[8]?.querySelector('input')?.value || '',
+        nkt:         cells[9]?.querySelector('select')?.value || '',
+        tinh:        cells[10]?.querySelector('select')?.value || '',
+        xa:          cells[11]?.querySelector('input')?.value || '',
+        thon:        cells[12]?.querySelector('input')?.value || '',
+        incentive:   cells[13]?.querySelector('select')?.value || '',
+        loaiIncentive: cells[14]?.querySelector('select')?.value || '',
+        moHinhDemo:  cells[15]?.querySelector('select')?.value || '',
+        womenLed:    cells[16]?.querySelector('select')?.value || '',
+        mucDoAD:     cells[17]?.querySelector('select')?.value || '',
+        datMucTieu:  cells[18]?.querySelector('select')?.value || '',
+        linkBC:      cells[19]?.querySelector('input')?.value || '',
+      });
+    }
+  });
+
+  if (rows.length === 0) { alert('Vui lòng nhập ít nhất 1 dòng có dữ liệu.'); return; }
+
+  const label = isp ? 'thực hành' : 'hộ';
+  addToHistory('M09', `${rows.length} ${label} CSA/NbS`,
+    `${rows.length} ${label} được ghi nhận\nTỉnh: ${prov}`, prov);
+
+  await gasSubmit(isp ? 'submitM09' : 'submitM09HH', {
+    submittedBy: currentUser.username,
+    period:      m06CurrentPeriod(),
+    tinh:        prov,
+    rows,
+  }, 'submit-success-m09',
+    `Đã ghi ${rows.length} ${label} vào sheet ${isp ? 'M09_DSThucHanh' : 'M09_DSHo'}.`);
+
+  _origSubmitFormM09(tab);
+};
+
+// ────────────────────────────────────────────────────────
+// M10 — Theo dõi Incentive
+// ────────────────────────────────────────────────────────
+const _origSubmitFormM10 = submitFormM10;
+submitFormM10 = async function() {
+  const prov = currentUser?.provinces[0] || '—';
+  const rows = [];
+
+  document.querySelectorAll('#incentive-tbody tr').forEach(row => {
+    const nameEl = row.querySelector('.inc-ho');
+    if (!nameEl || !nameEl.value.trim()) return;
+    const cells = row.querySelectorAll('td');
+    rows.push({
+      kyBC:          cells[1]?.querySelector('input')?.value || '',
+      maIncentive:   cells[2]?.querySelector('input')?.value || '',
+      tenChuongTrinh: cells[3]?.querySelector('input')?.value || '',
+      maHo:          cells[4]?.querySelector('input')?.value || '',
+      tenDaiDien:    cells[5]?.querySelector('input')?.value || '',
+      gioiTinh:      cells[6]?.querySelector('select')?.value || '',
+      danToc:        cells[7]?.querySelector('input')?.value || '',
+      namSinh:       cells[8]?.querySelector('input')?.value || '',
+      coNKT:         cells[9]?.querySelector('select')?.value || '',
+      tinh:          cells[10]?.querySelector('select')?.value || '',
+      xa:            cells[11]?.querySelector('input')?.value || '',
+      thon:          cells[12]?.querySelector('input')?.value || '',
+      hinhThucHL:    cells[13]?.querySelector('select')?.value || '',
+      loaiTien:      cells[14]?.querySelector('input')?.checked || false,
+      loaiVatTu:     cells[15]?.querySelector('input')?.checked || false,
+      loaiDaoTao:    cells[16]?.querySelector('input')?.checked || false,
+      loaiHaTang:    cells[17]?.querySelector('input')?.checked || false,
+      loaiDichVu:    cells[18]?.querySelector('input')?.checked || false,
+      loaiKhac:      cells[19]?.querySelector('input')?.value || '',
+      linkBC:        cells[20]?.querySelector('input')?.value || '',
+    });
+  });
+
+  if (rows.length === 0) { alert('Vui lòng nhập ít nhất 1 hộ.'); return; }
+
+  addToHistory('M10', `${rows.length} hộ hưởng lợi Incentive`,
+    `${rows.length} hộ được ghi nhận\nTỉnh: ${prov}`, prov);
+
+  await gasSubmit('submitM10', {
+    submittedBy: currentUser.username,
+    period:      m06CurrentPeriod(),
+    rows,
+  }, 'submit-success-m10',
+    `Đã ghi ${rows.length} hộ vào sheet M10_Incentive.`);
+
+  _origSubmitFormM10();
+};
 
 </script>
 </body>
