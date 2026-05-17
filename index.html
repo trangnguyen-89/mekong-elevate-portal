@@ -2374,7 +2374,7 @@ async function doLogin() {
     if (btn) { btn.disabled = false; btn.textContent = 'Đăng nhập'; }
   }
 
-  const user = users.find(x => x.username === u && x.password === p && x.active);
+  const user = users.find(x => x.username === u && (x.password === p || x.passwordHash === p) && x.active);
   if (!user) {
     document.getElementById('login-error').style.display = 'block';
     return;
@@ -3702,7 +3702,7 @@ function openEditUser(id) {
   editingUserId = id;
   document.getElementById('modal-title-text').textContent = 'Sửa người dùng: ' + user.displayName;
   document.getElementById('m-username').value = user.username;
-  document.getElementById('m-password').value = user.password;
+  document.getElementById('m-password').value = user.password || user.passwordHash || '';
   document.getElementById('m-displayname').value = user.displayName;
   document.getElementById('m-role').value = user.role;
   document.querySelectorAll('#m-provinces input').forEach(cb => {
@@ -3768,7 +3768,7 @@ async function toggleUser(id) {
       await gasPost({
         action:   'saveUser',
         username: user.username,
-        password: user.password,
+        password: user.password || user.passwordHash || '',
         displayName: user.displayName,
         role:     user.role,
         provinces: JSON.stringify(user.provinces),
