@@ -434,7 +434,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
         <div class="form-header">
           <div class="form-back" onclick="showPage('dashboard')">← Quay lại</div>
           <div>
-            <div class="form-title">M02 — Biểu mẫu hợp tác nghiên cứu</div>
+            <div class="form-title">M02 — Nghiên cứu</div>
             <div class="form-meta" id="form-m02-meta"></div>
           </div>
         </div>
@@ -597,7 +597,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
         <div class="form-header">
           <div class="form-back" onclick="showPage('dashboard')">← Quay lại</div>
           <div>
-            <div class="form-title">M03 — Biểu mẫu liên kết thị trường</div>
+            <div class="form-title">M03 — Liên kết thị trường</div>
             <div class="form-meta" id="form-m03-meta"></div>
           </div>
         </div>
@@ -665,7 +665,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
               </div>
               <div>
                 <div class="field-label">Xã</div>
-                <input type="text" id="m3-xa" placeholder="Tên xã">
+                <select id="m3-xa"><option value="">-- Chọn xã --</option></select>
               </div>
               <div>
                 <div class="field-label">Thôn</div>
@@ -679,7 +679,13 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
               </div>
               <div>
                 <div class="field-label">Kỳ báo cáo</div>
-                <input type="text" id="m3-ky-bc" placeholder="VD: Q1-2026" style="font-family:var(--mono)">
+                <select id="m3-ky-bc" style="font-family:var(--mono)">
+                  <option value="">-- Chọn kỳ --</option>
+                  <option>Q1-2026</option><option>Q2-2026</option><option>Q3-2026</option><option>Q4-2026</option>
+                  <option>Q1-2027</option><option>Q2-2027</option><option>Q3-2027</option><option>Q4-2027</option>
+                  <option>Q1-2028</option><option>Q2-2028</option><option>Q3-2028</option><option>Q4-2028</option>
+                  <option>Q1-2029</option><option>Q2-2029</option>
+                </select>
               </div>
             </div>
             <div>
@@ -694,40 +700,28 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
 
           <!-- SEC 2 -->
           <div class="form-section">
-            <div class="form-section-title">2. Kết quả liên kết</div>
-            <div style="margin-bottom:14px">
-              <div class="field-label">Hợp tác đã được thiết lập chính thức?</div>
-              <div class="radio-group">
-                <label class="radio-item"><input type="radio" name="m3-chinh-thuc" value="Có"> Có</label>
-                <label class="radio-item"><input type="radio" name="m3-chinh-thuc" value="Không"> Không</label>
-                <label class="radio-item"><input type="radio" name="m3-chinh-thuc" value="Đang trong quá trình"> Đang trong quá trình</label>
-              </div>
-            </div>
+            <div class="form-section-title">2. Thông tin hưởng lợi</div>
             <div class="form-row form-row-2">
               <div>
-                <div class="field-label">Số lượng hộ được hưởng lợi từ liên kết này</div>
+                <div class="field-label">Số hộ hưởng lợi từ liên kết này</div>
                 <input type="number" id="m3-so-ho" min="0" placeholder="0">
-              </div>
-              <div>
-                <div class="field-label">Số phụ nữ tham gia liên kết</div>
-                <input type="number" id="m3-so-pn" min="0" placeholder="0">
               </div>
             </div>
             <div>
-              <div class="field-label">Mô tả kết quả / tác động của liên kết (nếu có)</div>
-              <textarea id="m3-mo-ta" placeholder="Mô tả ngắn gọn kết quả đạt được..."></textarea>
+              <div class="field-label">Mô tả người hưởng lợi và cơ chế hưởng lợi</div>
+              <textarea id="m3-mo-ta" rows="4" placeholder="Mô tả sơ bộ: ai hưởng lợi (nhóm/hộ gia đình cụ thể), họ hưởng lợi như thế nào từ liên kết này (cơ chế, hình thức, điều kiện)..."></textarea>
             </div>
           </div>
 
           <!-- SEC 3 -->
           <div class="form-section">
-            <div class="form-section-title">3. Hỗ trợ từ dự án để thúc đẩy liên kết</div>
+            <div class="form-section-title">3. Hỗ trợ từ dự án để thúc đẩy liên kết <span style="color:var(--text3);font-size:11px">(có thể chọn nhiều)</span></div>
             <div class="checkbox-grid">
-              <label class="checkbox-item"><input type="checkbox" value="vb-thoa-thuan"><span>Văn bản thỏa thuận/hợp đồng/MOU đã ký</span></label>
-              <label class="checkbox-item"><input type="checkbox" value="bien-ban-hop"><span>Biên bản họp/làm việc giữa các bên</span></label>
-              <label class="checkbox-item"><input type="checkbox" value="ke-hoach-hd"><span>Kế hoạch hành động triển khai hợp tác</span></label>
-              <label class="checkbox-item"><input type="checkbox" value="hinh-anh"><span>Hình ảnh minh chứng sự kiện ký hợp tác</span></label>
-              <label class="checkbox-item"><input type="checkbox" value="bao-cao-to-nhom"><span>Báo cáo từ tổ nhóm SX/mạng lưới ND/đối tác</span></label>
+              <label class="checkbox-item"><input type="checkbox" value="ket-noi-dn"><span>Kết nối doanh nghiệp và hỗ trợ thúc đẩy hợp tác đối tác</span></label>
+              <label class="checkbox-item"><input type="checkbox" value="xuc-tien-tm"><span>Hỗ trợ tham gia các hoạt động xúc tiến thương mại và kết nối mạng lưới</span></label>
+              <label class="checkbox-item"><input type="checkbox" value="mou-ky-ket"><span>Hỗ trợ thúc đẩy ký kết biên bản ghi nhớ (MOU) và các thỏa thuận hợp tác</span></label>
+              <label class="checkbox-item"><input type="checkbox" value="dieu-phoi-tu-nhan"><span>Điều phối và kết nối với các đối tác khu vực tư nhân</span></label>
+              <label class="checkbox-item"><input type="checkbox" value="ho-tro-ky-thuat"><span>Hỗ trợ kỹ thuật về tiếp cận thị trường và áp dụng CSA</span></label>
             </div>
           </div>
 
@@ -735,7 +729,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
           <div class="form-section">
             <div class="form-section-title">4. Danh mục bằng chứng</div>
             <div class="checkbox-grid">
-              <label class="checkbox-item"><input type="checkbox" value="mou-m3"><span>Văn bản thỏa thuận/hợp đồng/MOU đã ký</span></label>
+              <label class="checkbox-item"><input type="checkbox" value="mou-m3"><span>Văn bản thỏa thuận/hợp đồng/biên bản ghi nhớ (MOU) hoặc cam kết hợp tác khác (đã ký), kèm danh sách tổ nhóm</span></label>
               <label class="checkbox-item"><input type="checkbox" value="bien-ban-m3"><span>Biên bản họp/làm việc</span></label>
               <label class="checkbox-item"><input type="checkbox" value="ke-hoach-m3"><span>Kế hoạch hành động triển khai</span></label>
               <label class="checkbox-item"><input type="checkbox" value="hinh-anh-m3"><span>Hình ảnh minh chứng</span></label>
@@ -799,6 +793,10 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
                   <option>Mondulkiri</option><option>Ratanakiri</option>
                   <option>Luang Prabang</option><option>Phongsaly</option>
                 </select>
+              </div>
+              <div>
+                <div class="field-label">Xã</div>
+                <select id="m4-xa"><option value="">-- Chọn xã --</option></select>
               </div>
             </div>
             <div class="form-row form-row-3">
@@ -1020,7 +1018,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
         <div class="form-header">
           <div class="form-back" onclick="showPage('dashboard')">← Quay lại</div>
           <div>
-            <div class="form-title">M07 — Theo dõi kết quả vận động & thực hiện chính sách</div>
+            <div class="form-title">M07 — Chính sách</div>
             <div class="form-meta" id="form-m07-meta"></div>
           </div>
         </div>
@@ -1056,13 +1054,19 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
               </div>
               <div>
                 <div class="field-label">Xã</div>
-                <input type="text" id="m7-xa" placeholder="Tên xã (nếu cấp xã)">
+                <select id="m7-xa"><option value="">-- Chọn xã --</option></select>
               </div>
             </div>
             <div class="form-row form-row-2">
               <div>
                 <div class="field-label">Kỳ báo cáo</div>
-                <input type="text" id="m7-ky-bc" placeholder="VD: Q2-2026" style="font-family:var(--mono)">
+                <select id="m7-ky-bc" style="font-family:var(--mono)">
+                  <option value="">-- Chọn kỳ --</option>
+                  <option>Q1-2026</option><option>Q2-2026</option><option>Q3-2026</option><option>Q4-2026</option>
+                  <option>Q1-2027</option><option>Q2-2027</option><option>Q3-2027</option><option>Q4-2027</option>
+                  <option>Q1-2028</option><option>Q2-2028</option><option>Q3-2028</option><option>Q4-2028</option>
+                  <option>Q1-2029</option><option>Q2-2029</option>
+                </select>
               </div>
               <div>
                 <div class="field-label">Phân loại <span class="field-required">*</span></div>
@@ -1105,13 +1109,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
                 </select>
               </div>
             </div>
-            <div style="margin-bottom:14px">
-              <div class="field-label">Hình thức</div>
-              <div class="radio-group">
-                <label class="radio-item"><input type="radio" name="m7-hinh-thuc" value="Chính sách"> Chính sách</label>
-                <label class="radio-item"><input type="radio" name="m7-hinh-thuc" value="Quá trình ra quyết định"> Quá trình ra quyết định</label>
-              </div>
-            </div>
+
             <div style="margin-bottom:14px">
               <div class="field-label">Mô tả nội dung chính / các điểm bổ sung, chỉnh sửa / các thay đổi trong thực thi</div>
               <textarea id="m7-mo-ta" rows="4" placeholder="Tóm tắt nội dung chính sách hoặc thay đổi..."></textarea>
@@ -1129,17 +1127,13 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
             </div>
             <div class="form-row form-row-2">
               <div>
-                <div class="field-label">Số người hưởng lợi trực tiếp</div>
+                <div class="field-label">Số người hưởng lợi ước tính</div>
                 <input type="number" id="m7-nhl-tt" min="0" placeholder="0" style="font-family:var(--mono)">
-              </div>
-              <div>
-                <div class="field-label">Số người hưởng lợi gián tiếp</div>
-                <input type="number" id="m7-nhl-gt" min="0" placeholder="0" style="font-family:var(--mono)">
               </div>
             </div>
             <div>
-              <div class="field-label">Phương pháp ước tính người hưởng lợi gián tiếp</div>
-              <input type="text" id="m7-pp-gt" placeholder="VD: Nhân số hộ × bình quân 4.2 người/hộ">
+              <div class="field-label">Mô tả cơ chế hưởng lợi và căn cứ/phương pháp ước tính</div>
+              <textarea id="m7-pp-gt" rows="4" placeholder="VD: Chính sách áp dụng tại 5 thôn vùng dự án, hỗ trợ tiếp cận CSA và cơ chế giảm rủi ro thiên tai cho hộ DTTS. Số ước tính dựa trên tổng dân số tại các xã áp dụng chính sách."></textarea>
             </div>
           </div>
 
@@ -1187,7 +1181,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
         <div class="form-header">
           <div class="form-back" onclick="showPage('dashboard')">← Quay lại</div>
           <div>
-            <div class="form-title">M08 — Theo dõi sự tham gia của nhóm yếu thế</div>
+            <div class="form-title">M08 — Quy trình ra quyết định</div>
             <div class="form-meta" id="form-m08-meta"></div>
           </div>
         </div>
@@ -1221,7 +1215,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
               </div>
               <div>
                 <div class="field-label">Xã</div>
-                <input type="text" id="m8-xa" placeholder="Tên xã">
+                <select id="m8-xa"><option value="">-- Chọn xã --</option></select>
               </div>
             </div>
             <div class="form-row form-row-3">
@@ -1238,7 +1232,13 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
               </div>
               <div>
                 <div class="field-label">Kỳ báo cáo</div>
-                <input type="text" id="m8-ky-bc" placeholder="VD: Q2-2026" style="font-family:var(--mono)">
+                <select id="m8-ky-bc" style="font-family:var(--mono)">
+                  <option value="">-- Chọn kỳ --</option>
+                  <option>Q1-2026</option><option>Q2-2026</option><option>Q3-2026</option><option>Q4-2026</option>
+                  <option>Q1-2027</option><option>Q2-2027</option><option>Q3-2027</option><option>Q4-2027</option>
+                  <option>Q1-2028</option><option>Q2-2028</option><option>Q3-2028</option><option>Q4-2028</option>
+                  <option>Q1-2029</option><option>Q2-2029</option>
+                </select>
               </div>
             </div>
           </div>
@@ -1247,7 +1247,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
           <div class="form-section">
             <div class="form-section-title">2. Sự tham gia và ảnh hưởng</div>
             <div style="margin-bottom:16px">
-              <div class="field-label">Nhóm yếu thế tham gia <span style="color:var(--text3);font-size:11px">(chọn nhiều)</span></div>
+              <div class="field-label">Nhóm yếu thế tham gia vào quá trình ra quyết định/vận động chính sách <span style="color:var(--text3);font-size:11px">(chọn nhiều)</span></div>
               <div class="checkbox-grid">
                 <label class="checkbox-item"><input type="checkbox" value="pn-dtts"><span>Phụ nữ DTTS</span></label>
                 <label class="checkbox-item"><input type="checkbox" value="thanh-nien"><span>Thanh niên</span></label>
@@ -1274,7 +1274,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
               </div>
             </div>
             <div id="m8-anh-huong-detail" style="display:none">
-              <div class="field-label">Mô tả việc ra quyết định/chính sách đã được ảnh hưởng như thế nào</div>
+              <div class="field-label">Mô tả việc ra quyết định/chính sách đã được ảnh hưởng bởi tiếng nói của các nhóm như thế nào</div>
               <textarea id="m8-mo-ta-ah" rows="3" placeholder="Mô tả cụ thể cách tiếng nói của các nhóm được tiếp nhận và phản ánh trong quyết định..."></textarea>
             </div>
           </div>
@@ -1324,7 +1324,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
         <div class="form-header">
           <div class="form-back" onclick="showPage('dashboard')">← Quay lại</div>
           <div>
-            <div class="form-title">M09 — Tracker CSA/NbS</div>
+            <div class="form-title">M09 — Theo dõi CSA & NBS</div>
             <div class="form-meta" id="form-m09-meta"></div>
           </div>
         </div>
@@ -1451,7 +1451,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
         <div class="form-header">
           <div class="form-back" onclick="showPage('dashboard')">← Quay lại</div>
           <div>
-            <div class="form-title">M01 — Tổ nhóm sản xuất & Mạng lưới nông dân</div>
+            <div class="form-title">M01 — Tổ nhóm & Mạng lưới</div>
             <div class="form-meta" id="form-m01-meta"></div>
           </div>
         </div>
@@ -1546,7 +1546,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
               </div>
               <div>
                 <div class="field-label">Xã</div>
-                <input type="text" id="m1-xa" placeholder="Tên xã">
+                <select id="m1-xa"><option value="">-- Chọn xã --</option></select>
               </div>
               <div>
                 <div class="field-label">Thôn</div>
@@ -1619,7 +1619,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
         <div class="form-header">
           <div class="form-back" onclick="showPage('dashboard')">← Quay lại</div>
           <div>
-            <div class="form-title">M06 — Safety Net · Chọn hồ sơ</div>
+            <div class="form-title">M06 — Cơ chế hỗ trợ RRTT · Chọn hồ sơ</div>
             <div class="form-meta" id="m06-picker-meta"></div>
           </div>
         </div>
@@ -1648,7 +1648,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
         <div class="form-header">
           <div class="form-back" onclick="showFormPage('M06')">← Quay lại danh sách</div>
           <div>
-            <div class="form-title">M06 — Cơ chế hỗ trợ rủi ro thiên tai cấp cộng đồng</div>
+            <div class="form-title">M06 — Cơ chế hỗ trợ RRTT</div>
             <div class="form-meta" id="form-m06-meta"></div>
           </div>
         </div>
@@ -1676,7 +1676,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
                   <option>Luang Prabang</option><option>Phongsaly</option>
                 </select>
               </div>
-              <div><div class="field-label">Xã</div><input type="text" id="m6-xa" placeholder="Tên xã"></div>
+              <div><div class="field-label">Xã</div><select id="m6-xa"><option value="">-- Chọn xã --</option></select></div>
               <div><div class="field-label">Thôn</div><input type="text" id="m6-thon" placeholder="Tên thôn/bản"></div>
             </div>
             <div class="form-row form-row-3">
@@ -1792,17 +1792,17 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
                 </div>
               </div>
               <div>
+                <div class="field-label">Có tiêu chí ưu tiên cho nhóm yếu thế?</div>
+                <div class="radio-group" style="margin-top:6px">
+                  <label class="radio-item"><input type="radio" name="m6-yeu-the" value="Có"> Có</label>
+                  <label class="radio-item"><input type="radio" name="m6-yeu-the" value="Không"> Không</label>
+                </div>
+              </div>
+              <div>
                 <div class="field-label">Quy chế đã phổ biến tới hộ mục tiêu?</div>
                 <div class="radio-group" style="margin-top:6px">
                   <label class="radio-item"><input type="radio" name="m6-pho-bien" value="Có"> Có</label>
                   <label class="radio-item"><input type="radio" name="m6-pho-bien" value="Không"> Không</label>
-                </div>
-              </div>
-              <div>
-                <div class="field-label">Có tiêu chí cho nhóm yếu thế?</div>
-                <div class="radio-group" style="margin-top:6px">
-                  <label class="radio-item"><input type="radio" name="m6-yeu-the" value="Có"> Có</label>
-                  <label class="radio-item"><input type="radio" name="m6-yeu-the" value="Không"> Không</label>
                 </div>
               </div>
             </div>
@@ -1871,7 +1871,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
         <div class="form-header">
           <div class="form-back" onclick="showPage('dashboard')">← Quay lại</div>
           <div>
-            <div class="form-title">M10 — Danh sách hộ hưởng lợi Incentive Program</div>
+            <div class="form-title">M10 — Theo dõi Incentive</div>
             <div class="form-meta" id="form-m10-meta"></div>
           </div>
         </div>
@@ -2042,7 +2042,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
       <select id="m-role">
         <option value="admin">Admin — tất cả forms, tất cả tỉnh</option>
         <option value="meal_officer">Country MEAL Officer</option>
-        <option value="field_staff">Field Staff</option>
+        <option value="field_staff">Technical Staff</option>
         <option value="partner">Partner Staff</option>
       </select>
     </div>
@@ -2061,16 +2061,16 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
     <div class="form-field">
       <label>Forms được gán</label>
       <div class="checkbox-grid-sm" id="m-forms">
-        <label class="checkbox-sm"><input type="checkbox" value="M01"> M01 — Nhóm/Mạng lưới</label>
+        <label class="checkbox-sm"><input type="checkbox" value="M01"> M01 — Tổ nhóm & Mạng lưới</label>
         <label class="checkbox-sm"><input type="checkbox" value="M02"> M02 — Hợp tác NC</label>
         <label class="checkbox-sm"><input type="checkbox" value="M03"> M03 — Liên kết TT</label>
         <label class="checkbox-sm"><input type="checkbox" value="M04"> M04 — DS tham dự</label>
         <label class="checkbox-sm"><input type="checkbox" value="M05"> M05 — Sự kiện</label>
-        <label class="checkbox-sm"><input type="checkbox" value="M06"> M06 — Safety Net</label>
-        <label class="checkbox-sm"><input type="checkbox" value="M07"> M07 — Policy</label>
-        <label class="checkbox-sm"><input type="checkbox" value="M08"> M08 — Influence</label>
-        <label class="checkbox-sm"><input type="checkbox" value="M09"> M09 — CSA/NbS</label>
-        <label class="checkbox-sm"><input type="checkbox" value="M10"> M10 — Incentive</label>
+        <label class="checkbox-sm"><input type="checkbox" value="M06"> M06 — Cơ chế hỗ trợ RRTT</label>
+        <label class="checkbox-sm"><input type="checkbox" value="M07"> M07 — Chính sách</label>
+        <label class="checkbox-sm"><input type="checkbox" value="M08"> M08 — Quy trình ra quyết định</label>
+        <label class="checkbox-sm"><input type="checkbox" value="M09"> M09 — Theo dõi CSA & NBS</label>
+        <label class="checkbox-sm"><input type="checkbox" value="M10"> M10 — Theo dõi Incentive</label>
       </div>
     </div>
     <div class="modal-footer">
@@ -2299,16 +2299,16 @@ async function loadM06FromSheet(username) {
 
 // ════════════════════════════════════════════════════════════════════
 const FORMS_META = {
-  M01: { title: 'Nhóm/Mạng lưới', sub: 'Tổ nhóm SX và mạng lưới nông dân' },
-  M02: { title: 'Hợp tác nghiên cứu', sub: 'Theo dõi kết quả nghiên cứu với đối tác' },
+  M01: { title: 'Tổ nhóm & Mạng lưới', sub: 'Tổ nhóm sản xuất và mạng lưới nông dân' },
+  M02: { title: 'Nghiên cứu', sub: 'Theo dõi kết quả nghiên cứu với đối tác' },
   M03: { title: 'Liên kết thị trường', sub: 'Thông tin liên kết thị trường' },
-  M04: { title: 'DS tham dự', sub: 'Danh sách người tham dự sự kiện' },
-  M05: { title: 'Sự kiện', sub: 'Bảng tổng hợp số liệu sự kiện' },
-  M06: { title: 'Safety Net', sub: 'Cơ chế hỗ trợ rủi ro thiên tai' },
-  M07: { title: 'Policy', sub: 'Vận động và thực hiện chính sách' },
-  M08: { title: 'Influence', sub: 'Tham gia của nhóm yếu thế' },
-  M09: { title: 'CSA/NbS Tracker', sub: 'Thực hành CSA và NbS' },
-  M10: { title: 'Incentive', sub: 'Danh sách hộ hưởng lợi incentive' },
+  M04: { title: 'Danh sách tham dự', sub: 'Danh sách người tham dự sự kiện' },
+  M05: { title: 'Dữ liệu sự kiện', sub: 'Bảng tổng hợp số liệu sự kiện' },
+  M06: { title: 'Cơ chế hỗ trợ RRTT', sub: 'Cơ chế hỗ trợ rủi ro thiên tai' },
+  M07: { title: 'Chính sách', sub: 'Vận động và thực hiện chính sách' },
+  M08: { title: 'Quy trình ra quyết định', sub: 'Tham gia của nhóm yếu thế vào quyết định' },
+  M09: { title: 'Theo dõi CSA & NBS', sub: 'Theo dõi thực hành CSA và NbS' },
+  M10: { title: 'Theo dõi Incentive', sub: 'Danh sách hộ hưởng lợi Incentive' },
 };
 
 let nextId = 6;
@@ -2354,7 +2354,7 @@ let m06Records = [
   }
 ];
 
-const ROLE_LABELS = { admin:'Admin', meal_officer:'MEAL Officer', field_staff:'Field Staff', partner:'Partner' };
+const ROLE_LABELS = { admin:'Admin', meal_officer:'MEAL Officer', field_staff:'Technical Staff', partner:'Partner' };
 const ROLE_CLASSES = { admin:'role-admin', meal_officer:'role-meal', field_staff:'role-field', partner:'role-partner' };
 
 function fillDemo(u, p) {
@@ -2643,9 +2643,9 @@ function submitFormM03() {
   window.scrollTo(0,0); resetFormM03(); buildDashboard();
 }
 function resetFormM03() {
-  ['m3-ten-nhom','m3-ma-nhom','m3-ten-dt','m3-xa','m3-thon','m3-ky-bc','m3-mo-ta','m3-link-bc','m3-bc-khac','m3-so-ho','m3-so-pn']
+  ['m3-ten-nhom','m3-ma-nhom','m3-ten-dt','m3-thon','m3-mo-ta','m3-link-bc','m3-bc-khac','m3-so-ho','m3-so-pn']
     .forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
-  ['m3-loai-nhom','m3-loai-dt','m3-hinh-thuc','m3-tinh']
+  ['m3-loai-nhom','m3-loai-dt','m3-hinh-thuc','m3-tinh','m3-xa','m3-ky-bc']
     .forEach(id => { const el=document.getElementById(id); if(el) el.selectedIndex=0; });
   const nd=document.getElementById('m3-ngay-lap'); if(nd) nd.value='';
   document.querySelectorAll('#page-form-m03 input[type=checkbox]').forEach(c=>c.checked=false);
@@ -2887,10 +2887,10 @@ function submitFormM07() {
 }
 
 function resetFormM07() {
-  ['m7-ten-cs','m7-xa','m7-ky-bc','m7-mo-ta','m7-mo-ta-kq','m7-pp-gt','m7-link-bc',
-   'm7-ht-khac','m7-bc-khac','m7-chu-de-khac','m7-nhl-tt','m7-nhl-gt']
+  ['m7-ten-cs','m7-mo-ta','m7-mo-ta-kq','m7-pp-gt','m7-link-bc',
+   'm7-ht-khac','m7-bc-khac','m7-chu-de-khac','m7-nhl-tt']
     .forEach(id=>{const el=document.getElementById(id);if(el) el.value='';});
-  ['m7-cap','m7-tinh','m7-phan-loai','m7-pl-cs']
+  ['m7-cap','m7-tinh','m7-xa','m7-ky-bc','m7-phan-loai','m7-pl-cs']
     .forEach(id=>{const el=document.getElementById(id);if(el) el.selectedIndex=0;});
   const nd=document.getElementById('m7-ngay-bh'); if(nd) nd.value='';
   document.querySelectorAll('#page-form-m07 input[type=checkbox]').forEach(c=>c.checked=false);
@@ -2914,8 +2914,9 @@ function submitFormM08() {
   window.scrollTo(0,0); resetFormM08(); buildDashboard();
 }
 function resetFormM08() {
-  ['m8-ten-cs','m8-xa','m8-thon','m8-ky-bc','m8-mo-ta-ah','m8-htham-khac','m8-ht-khac','m8-bc-khac','m8-link-bc']
+  ['m8-ten-cs','m8-xa','m8-thon','m8-mo-ta-ah','m8-htham-khac','m8-ht-khac','m8-bc-khac','m8-link-bc']
     .forEach(id=>{const el=document.getElementById(id);if(el) el.value='';});
+  document.getElementById('m8-ky-bc').selectedIndex=0;
   ['m8-cap','m8-tinh'].forEach(id=>{const el=document.getElementById(id);if(el) el.selectedIndex=0;});
   document.querySelectorAll('#page-form-m08 input[type=checkbox]').forEach(c=>c.checked=false);
   document.querySelectorAll('#page-form-m08 input[type=radio]').forEach(r=>r.checked=false);
@@ -3306,7 +3307,7 @@ async function openM06Picker() {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const navEl = document.getElementById('nav-form-m06');
   if (navEl) navEl.classList.add('active');
-  document.getElementById('page-title').textContent = 'M06 — Safety Net';
+  document.getElementById('page-title').textContent = 'M06 — Cơ chế hỗ trợ RRTT';
   document.getElementById('m06-picker-meta').textContent =
     'Tỉnh: ' + currentUser.provinces.join(', ') + '  ·  Người nhập: ' + currentUser.displayName;
   document.getElementById('page-m06-picker').style.display = 'block';
@@ -3891,16 +3892,16 @@ function resetSetup() {
 let submissionHistory = {
   // Seed demo data
   'meal_sonla': [
-    { id:'sub-001', formCode:'M04', formTitle:'DS tham dự', period:'Q1-2026', province:'Sơn La', submittedAt:'2026-04-05T09:32:00', summary:'32 người tham dự — 18 nữ, 28 DTTS', detail:'Hoạt động: Tập huấn CSA cho nhóm VSLA\nĐịa điểm: Bản Nà Nghịu, xã Chiềng Ngần\nNgày: 02/04/2026\nTổng: 32 người (18 nữ, 28 DTTS, 2 NKT)' },
-    { id:'sub-002', formCode:'M01', formTitle:'Nhóm/Mạng lưới', period:'Q1-2026', province:'Sơn La', submittedAt:'2026-04-10T14:15:00', summary:'5 nhóm VSLA — 2 có quỹ RRTT', detail:'5 nhóm VSLA đã được kiện toàn\n2 nhóm có quỹ phòng ngừa rủi ro thiên tai\nTổng thành viên: 87 người (64 nữ)' },
-    { id:'sub-003', formCode:'M05', formTitle:'Sự kiện', period:'Q1-2026', province:'Sơn La', submittedAt:'2026-04-08T11:00:00', summary:'3 sự kiện — 94 lượt tham gia', detail:'SK-001: Tập huấn CSA — 32 người\nSK-002: Họp nhóm VSLA — 24 người\nSK-003: Hội thảo liên kết thị trường — 38 người' },
+    { id:'sub-001', formCode:'M04', formTitle:'Danh sách tham dự', period:'Q1-2026', province:'Sơn La', submittedAt:'2026-04-05T09:32:00', summary:'32 người tham dự — 18 nữ, 28 DTTS', detail:'Hoạt động: Tập huấn CSA cho nhóm VSLA\nĐịa điểm: Bản Nà Nghịu, xã Chiềng Ngần\nNgày: 02/04/2026\nTổng: 32 người (18 nữ, 28 DTTS, 2 NKT)' },
+    { id:'sub-002', formCode:'M01', formTitle:'Tổ nhóm & Mạng lưới', period:'Q1-2026', province:'Sơn La', submittedAt:'2026-04-10T14:15:00', summary:'5 nhóm VSLA — 2 có quỹ RRTT', detail:'5 nhóm VSLA đã được kiện toàn\n2 nhóm có quỹ phòng ngừa rủi ro thiên tai\nTổng thành viên: 87 người (64 nữ)' },
+    { id:'sub-003', formCode:'M05', formTitle:'Dữ liệu sự kiện', period:'Q1-2026', province:'Sơn La', submittedAt:'2026-04-08T11:00:00', summary:'3 sự kiện — 94 lượt tham gia', detail:'SK-001: Tập huấn CSA — 32 người\nSK-002: Họp nhóm VSLA — 24 người\nSK-003: Hội thảo liên kết thị trường — 38 người' },
   ],
   'field_ea_drong': [
-    { id:'sub-004', formCode:'M04', formTitle:'DS tham dự', period:'Q1-2026', province:'Dak Lak', submittedAt:'2026-04-07T08:45:00', summary:'19 người tham dự — 12 nữ', detail:'Hoạt động: Tập huấn NbS\nĐịa điểm: Buôn Ea Drông\nTổng: 19 người (12 nữ, 17 DTTS)' },
-    { id:'sub-005', formCode:'M05', formTitle:'Sự kiện', period:'Q1-2026', province:'Dak Lak', submittedAt:'2026-04-06T10:20:00', summary:'2 sự kiện — 41 lượt tham gia', detail:'SK-001: Tập huấn NbS — 19 người\nSK-002: Họp cộng đồng — 22 người' },
+    { id:'sub-004', formCode:'M04', formTitle:'Danh sách tham dự', period:'Q1-2026', province:'Dak Lak', submittedAt:'2026-04-07T08:45:00', summary:'19 người tham dự — 12 nữ', detail:'Hoạt động: Tập huấn NbS\nĐịa điểm: Buôn Ea Drông\nTổng: 19 người (12 nữ, 17 DTTS)' },
+    { id:'sub-005', formCode:'M05', formTitle:'Dữ liệu sự kiện', period:'Q1-2026', province:'Dak Lak', submittedAt:'2026-04-06T10:20:00', summary:'2 sự kiện — 41 lượt tham gia', detail:'SK-001: Tập huấn NbS — 19 người\nSK-002: Họp cộng đồng — 22 người' },
   ],
   'partner_tb': [
-    { id:'sub-006', formCode:'M09', formTitle:'CSA/NbS Tracker', period:'Q1-2026', province:'Sơn La', submittedAt:'2026-04-12T16:30:00', summary:'4 mô hình CSA mới — 28 hộ áp dụng', detail:'4 mô hình thử nghiệm CSA đã được ghi nhận\n28 hộ áp dụng thực hành mới (18 hộ nữ chủ)\nNhóm: VSLA Chiềng Ngần 1' },
+    { id:'sub-006', formCode:'M09', formTitle:'Theo dõi CSA & NBS', period:'Q1-2026', province:'Sơn La', submittedAt:'2026-04-12T16:30:00', summary:'4 mô hình CSA mới — 28 hộ áp dụng', detail:'4 mô hình thử nghiệm CSA đã được ghi nhận\n28 hộ áp dụng thực hành mới (18 hộ nữ chủ)\nNhóm: VSLA Chiềng Ngần 1' },
   ],
   'meal_daklak': [],
   'admin': [],
@@ -4338,6 +4339,82 @@ initApp = function() {
   if (!GAS_CONFIGURED) showOfflineBanner();
   setTimeout(lockProvinceDropdowns, 200);
 };
+
+// ── XA DROPDOWN — tự động đổi options theo tỉnh ──
+const XA_BY_TINH = {
+  'Sơn La':  ['Muổi Nọi', 'Mường Chanh'],
+  'Dak Lak': ['Ea Drong', 'Tam Giang'],
+};
+
+function buildXaOptions(tinh, selectedVal) {
+  const opts = XA_BY_TINH[tinh] || [];
+  let h = '<option value="">-- Chọn xã --</option>';
+  opts.forEach(x => {
+    h += `<option value="${x}"${selectedVal===x?' selected':''}>${x}</option>`;
+  });
+  return h;
+}
+
+function updateXaDropdown(tinhId, xaId) {
+  const tinhEl = document.getElementById(tinhId);
+  const xaEl   = document.getElementById(xaId);
+  if (!tinhEl || !xaEl) return;
+  const tinh = tinhEl.value;
+  const prev = xaEl.value;
+  xaEl.innerHTML = buildXaOptions(tinh, prev);
+  const opts = XA_BY_TINH[tinh] || [];
+  xaEl.disabled = opts.length === 0;
+  xaEl.style.opacity = opts.length === 0 ? '0.5' : '1';
+  xaEl.title = opts.length === 0 ? 'Tỉnh này chưa có danh sách xã trong dự án' : '';
+}
+
+const TINH_XA_PAIRS = [
+  ['m1-tinh','m1-xa'],
+  ['m3-tinh','m3-xa'],
+  ['m4-tinh','m4-xa'],
+  ['m6-tinh','m6-xa'],
+  ['m7-tinh','m7-xa'],
+  ['m8-tinh','m8-xa'],
+];
+
+function initXaDropdowns() {
+  TINH_XA_PAIRS.forEach(([tinhId, xaId]) => {
+    const tinhEl = document.getElementById(tinhId);
+    if (tinhEl && !tinhEl._xaBound) {
+      tinhEl.addEventListener('change', () => updateXaDropdown(tinhId, xaId));
+      tinhEl._xaBound = true;
+      updateXaDropdown(tinhId, xaId);
+    }
+  });
+}
+
+// Patch initApp
+const _origInitAppXa = typeof initApp === 'function' ? initApp : null;
+if (_origInitAppXa) {
+  initApp = function() {
+    _origInitAppXa();
+    setTimeout(initXaDropdowns, 350);
+  };
+}
+
+// Patch showFormPage
+const _origShowFormPageXa = typeof showFormPage === 'function' ? showFormPage : null;
+if (_origShowFormPageXa) {
+  showFormPage = function(code) {
+    _origShowFormPageXa(code);
+    setTimeout(initXaDropdowns, 150);
+  };
+}
+
+// Also re-init for M06 which opens via openM06New/openM06Update
+const _origOpenM06New = typeof openM06New === 'function' ? openM06New : null;
+if (_origOpenM06New) {
+  openM06New = function() {
+    _origOpenM06New();
+    setTimeout(initXaDropdowns, 100);
+  };
+}
+
 </script>
 </body>
 </html>
